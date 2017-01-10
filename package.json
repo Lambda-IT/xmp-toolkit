@@ -1,0 +1,30 @@
+{
+  "name": "xmp-toolkit",
+  "version": "1.0.0",
+  "description": "Library to handle xmp metadata in files",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lambda-IT/xmp-toolkit.git"
+  },
+  "keywords": [],
+  "author": "Lambda-IT GmbH",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lambda-IT/xmp-toolkit/issues"
+  },
+  "homepage": "https://github.com/Lambda-IT/xmp-toolkit",
+  "devDependencies": {
+    "@types/node": "^6.0.58",
+    "typescript": "^2.1.4",
+    "xmldom": "^0.1.27",
+    "zombie": "^5.0.5"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.48",
+    "@types/node": "^6.0.59"
+  }
+}
