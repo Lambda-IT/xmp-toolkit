@@ -2,15 +2,31 @@
   "targets": [
     {
       "target_name": "xmptoolkit",
-      "sources": [ "xmptoolkit.cc" ],
+      "sources": [ "xmptoolkit.cc", "XmpReadWorker.cc", "XmpWriteWorker.cc" ],
       "include_dirs" : [
         "<!(node -e \"require('nan')\")", 
-        "../include"
+        "include"
       ],
       "libraries": [
-        "C:/dev/repo/xmp-toolkit/nodeaddon/libraries/windows_x64/Release/XMPCoreStatic.lib",
-        "C:/dev/repo/xmp-toolkit/nodeaddon/libraries/windows_x64/Release/XMPFilesStatic.lib"
-      ]
+        "\"..\libraries\windows_x64\Release\XMPCoreStatic.lib\"",
+        "\"..\libraries\windows_x64\Release\XMPFilesStatic.lib\""
+      ],
+      "configurations": {
+            "Debug": {
+                "msvs_settings": {
+                            "VCCLCompilerTool": {
+                                "RuntimeLibrary": "3" # /MDd 	Debug Multithreaded DLL
+                    },
+                },
+            },
+            "Release": {
+                "msvs_settings": {
+                            "VCCLCompilerTool": {
+                                "RuntimeLibrary": "2" # /MD Multithreaded DLL
+                    },
+                },
+            },
+        },
     }
   ]
 }

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <thread>
 
 using namespace std;
 using namespace Nan;
@@ -36,6 +37,133 @@ SXMPMeta createXMPFromString(string xmp)
 	return meta;
 }
 
+class XmpWriteWorker : public AsyncWorker {
+public: 
+	XmpWriteWorker(Callback * callback, string outfilePath, string rawXmp) :
+		AsyncWorker(callback), outfilePath(outfilePath), rawXmp(rawXmp) {
+
+	}
+
+	void Execute() {
+
+		cout << "Worker Thread Id: " << std::this_thread::get_id() << endl;
+
+		SXMPMeta::Initialize();
+		XMP_OptionBits options = 0;
+		SXMPFiles::Initialize(options);
+
+		try {
+			// Options to open the file with - open for editing and use a smart handler
+			XMP_OptionBits opts = kXMPFiles_OpenForUpdate | kXMPFiles_OpenUseSmartHandler;
+
+			bool ok;
+			SXMPFiles myFile;
+
+			// First we try and open the file
+			ok = myFile.OpenFile(outfilePath, kXMP_UnknownFile, opts);
+
+			if (!ok)
+			{
+				opts = kXMPFiles_OpenForUpdate | kXMPFiles_OpenUsePacketScanning;
+				ok = myFile.OpenFile(outfilePath, kXMP_UnknownFile, opts);
+			}
+
+			if (ok) {
+				SXMPMeta meta = createXMPFromString(rawXmp);
+				//SXMPMeta meta = createXMPFromRDF(rawXmp);
+
+				// Check we can put the XMP packet back into the file
+				if (myFile.CanPutXMP(meta))
+				{
+					// If so then update the file with the modified XMP
+					myFile.PutXMP(meta);
+				}
+
+				// Close the SXMPFile.  This *must* be called.  The XMP is not
+				// actually written and the disk file is not closed until this call is made.
+				myFile.CloseFile();
+			}
+
+		}
+		catch (XMP_Error & e) {
+			cout << "ERROR: " << e.GetErrMsg() << endl;
+		}
+
+		SXMPFiles::Terminate();
+		SXMPMeta::Terminate();
+	}
+
+	void HandleOKCallback() {
+		Local<Value> argv[1] = { Nan::New<String>(outfilePath).ToLocalChecked() };
+		callback->Call(1, argv);
+	}
+
+private:
+	string outfilePath;
+	string rawXmp;
+};
+
+class XmpReadWorker : public AsyncWorker {
+public:
+	XmpReadWorker(Callback * callback, string filename)
+		: AsyncWorker(callback), filename(filename) {
+
+	}
+
+	void Execute() {
+
+		cout << "Worker Thread Id: " << std::this_thread::get_id() << endl;
+
+		SXMPMeta::Initialize();
+		XMP_OptionBits options = 0;
+		SXMPFiles::Initialize(options);
+
+		try {
+			// Options to open the file with - read only and use a file handler
+			XMP_OptionBits opts = kXMPFiles_OpenForRead | kXMPFiles_OpenUseSmartHandler;
+
+			bool ok;
+			SXMPFiles myFile;
+
+			ok = myFile.OpenFile(filename, kXMP_UnknownFile, opts);
+
+			if (!ok)
+			{
+				opts = kXMPFiles_OpenForUpdate | kXMPFiles_OpenUsePacketScanning;
+				ok = myFile.OpenFile(filename, kXMP_UnknownFile, opts);
+			}
+
+			// If the file is open then read the metadata
+			if (ok)
+			{
+				// Create the xmp object and get the xmp data
+				SXMPMeta meta;
+				XMP_PacketInfo info;
+				myFile.GetXMP(&meta, &rawXmp, &info);
+
+				// Close the SXMPFile.  The resource file is already closed if it was
+				// opened as read only but this call must still be made.
+				myFile.CloseFile();
+			}
+		}
+		catch (XMP_Error & e) {
+			cout << "ERROR: " << e.GetErrMsg() << endl;
+		}
+
+		SXMPFiles::Terminate();
+		SXMPMeta::Terminate();
+	}
+
+	void HandleOKCallback() {
+		Local<Value> argv[1] = { Nan::New<String>(rawXmp).ToLocalChecked() };
+		callback->Call(1, argv);
+	}
+
+private:
+	string filename;
+	string rawXmp;
+};
+
 NAN_METHOD(Version) {
 	info.GetReturnValue().Set(
 		Nan::New<String>("0.1").ToLocalChecked());
@@ -50,111 +178,36 @@ NAN_METHOD(SdkVersion) {
 }
 
 NAN_METHOD(WriteXmp) {
+
+	//cout << "V8 Thread Id: " << std::this_thread::get_id() << endl;
+
 	v8::String::Utf8Value filenameArg(info[0]->ToString());
 	std::string filename(*filenameArg);
 
 	v8::String::Utf8Value rawXmpArg(info[1]->ToString());
 	std::string rawXmp(*rawXmpArg);
 
-	SXMPMeta::Initialize();
-	XMP_OptionBits options = 0;
-	SXMPFiles::Initialize(options);
+	Callback *callback = new Callback(info[2].As<Function>());
 
-	try {
-		// Options to open the file with - open for editing and use a smart handler
-		XMP_OptionBits opts = kXMPFiles_OpenForUpdate | kXMPFiles_OpenUseSmartHandler;
-
-		bool ok;
-		SXMPFiles myFile;
-
-		// First we try and open the file
-		ok = myFile.OpenFile(filename, kXMP_UnknownFile, opts);
-
-		if (!ok)
-		{
-			opts = kXMPFiles_OpenForUpdate | kXMPFiles_OpenUsePacketScanning;
-			ok = myFile.OpenFile(filename, kXMP_UnknownFile, opts);
-		}
-
-		if (ok) {
-			SXMPMeta meta = createXMPFromString(rawXmp);
-			//SXMPMeta meta = createXMPFromRDF(rawXmp);
-			
-			// Check we can put the XMP packet back into the file
-			if (myFile.CanPutXMP(meta))
-			{
-				// If so then update the file with the modified XMP
-				myFile.PutXMP(meta);
-			}
-
-			// Close the SXMPFile.  This *must* be called.  The XMP is not
-			// actually written and the disk file is not closed until this call is made.
-			myFile.CloseFile();
-		}
-
-	} catch (XMP_Error & e) {
-		cout << "ERROR: " << e.GetErrMsg() << endl;
-	}
-
-	SXMPFiles::Terminate();
-	SXMPMeta::Terminate();
-
-	info.GetReturnValue().Set(
-		Nan::New<String>(filename).ToLocalChecked());
+	AsyncQueueWorker(new XmpWriteWorker(callback, filename, rawXmp));
 }
 
 // Add validation method
 
 NAN_METHOD(ReadXmp) {
+
+	//cout << "V8 Thread Id: " << std::this_thread::get_id() << endl;
+
 	v8::String::Utf8Value val(info[0]->ToString());
 	std::string filename(*val);
 
-	SXMPMeta::Initialize();
-	XMP_OptionBits options = 0;
-	SXMPFiles::Initialize(options);
-	
-	std::string rawXmp;
+	Callback *callback = new Callback(info[1].As<Function>());
 
-	try {
-		// Options to open the file with - read only and use a file handler
-		XMP_OptionBits opts = kXMPFiles_OpenForRead | kXMPFiles_OpenUseSmartHandler;
-		
-		bool ok;
-		SXMPFiles myFile;
-
-		ok = myFile.OpenFile(filename, kXMP_UnknownFile, opts);
-
-		if (!ok)
-		{
-			opts = kXMPFiles_OpenForUpdate | kXMPFiles_OpenUsePacketScanning;
-			ok = myFile.OpenFile(filename, kXMP_UnknownFile, opts);
-		}
-
-		// If the file is open then read the metadata
-		if (ok)
-		{
-			// Create the xmp object and get the xmp data
-			SXMPMeta meta;
-			XMP_PacketInfo info;
-			myFile.GetXMP(&meta, &rawXmp, &info);
-
-			// Close the SXMPFile.  The resource file is already closed if it was
-			// opened as read only but this call must still be made.
-			myFile.CloseFile();
-		}
-	}
-	catch (XMP_Error & e) {
-		cout << "ERROR: " << e.GetErrMsg() << endl;
-	}
-	
-	SXMPFiles::Terminate();
-	SXMPMeta::Terminate();
-
-	info.GetReturnValue().Set(
-		Nan::New<String>(rawXmp).ToLocalChecked());
+	AsyncQueueWorker(new XmpReadWorker(callback, filename));
 }
 
 NAN_MODULE_INIT(Init) {
+
 	 Nan::Set(target, New<String>("version").ToLocalChecked(),
 		 GetFunction(New<FunctionTemplate>(Version)).ToLocalChecked());
 	 Nan::Set(target, New<String>("sdkVersion").ToLocalChecked(),
