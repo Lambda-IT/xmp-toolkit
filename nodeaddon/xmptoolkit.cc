@@ -21,6 +21,7 @@ using namespace v8;
 SXMPMeta createXMPFromString(string xmp)
 {
 	SXMPMeta meta;
+
 	const char * xmpBuffer = xmp.c_str();
 
 	// Loop over the rdf string and create the XMP object
@@ -164,6 +165,43 @@ private:
 	string rawXmp;
 };
 
+class XmpValidationWorker : public AsyncWorker {
+public:
+	XmpValidationWorker(Callback * callback, string rawXmp) :
+		AsyncWorker(callback), rawXmp(rawXmp) {
+	}
+
+	void Execute() {
+
+		cout << "Worker Thread Id: " << std::this_thread::get_id() << endl;
+
+		SXMPMeta::Initialize();
+
+		try {
+			SXMPMeta meta = createXMPFromString(rawXmp);
+			//meta.SetDefaultErrorCallback()
+			//meta.set
+			//meta.DumpObject()
+			isValid = true;
+		}
+		catch (XMP_Error & e) {
+			cout << "ERROR: " << e.GetErrMsg() << endl;
+		}
+
+		SXMPMeta::Terminate();
+	}
+
+	void HandleOKCallback() {
+		Local<Value> argv[1] = { Nan::New<Boolean>(isValid)};
+		callback->Call(1, argv);
+	}
+
+private:
+	string rawXmp;
+	bool isValid;
+};
+
+
 NAN_METHOD(Version) {
 	info.GetReturnValue().Set(
 		Nan::New<String>("0.1").ToLocalChecked());
@@ -178,9 +216,6 @@ NAN_METHOD(SdkVersion) {
 }
 
 NAN_METHOD(WriteXmp) {
-
-	//cout << "V8 Thread Id: " << std::this_thread::get_id() << endl;
-
 	v8::String::Utf8Value filenameArg(info[0]->ToString());
 	std::string filename(*filenameArg);
 
@@ -192,19 +227,25 @@ NAN_METHOD(WriteXmp) {
 	AsyncQueueWorker(new XmpWriteWorker(callback, filename, rawXmp));
 }
 
+NAN_METHOD(ValidateXmp) {
+	v8::String::Utf8Value rawXmpArg(info[0]->ToString());
+	std::string rawXmp(*rawXmpArg);
+
+	Callback *callback = new Callback(info[1].As<Function>());
+
+	AsyncQueueWorker(new XmpValidationWorker(callback, rawXmp));
+}
+
 // Add validation method
 
 NAN_METHOD(ReadXmp) {
-
-	//cout << "V8 Thread Id: " << std::this_thread::get_id() << endl;
-
 	v8::String::Utf8Value val(info[0]->ToString());
 	std::string filename(*val);
 
 	Callback *callback = new Callback(info[1].As<Function>());
 
 	AsyncQueueWorker(new XmpReadWorker(callback, filename));
-}
+}\
 
 NAN_MODULE_INIT(Init) {
 
@@ -216,6 +257,8 @@ NAN_MODULE_INIT(Init) {
 		 GetFunction(New<FunctionTemplate>(ReadXmp)).ToLocalChecked());
 	 Nan::Set(target, New<String>("writeXmp").ToLocalChecked(),
 		 GetFunction(New<FunctionTemplate>(WriteXmp)).ToLocalChecked());
+	 Nan::Set(target, New<String>("validateXmp").ToLocalChecked(),
+		 GetFunction(New<FunctionTemplate>(ValidateXmp)).ToLocalChecked());
 }
 
 NODE_MODULE(xmptoolkit, Init)
