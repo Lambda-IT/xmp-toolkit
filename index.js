@@ -3,8 +3,6 @@
 const xmptoolkit = require('./nodeaddon/build/Release/xmptoolkit');
 const fs = require('fs');
 const fse = require('fs-extra')
-const jsonld = require('jsonld');
-var $rdf = require('rdflib');
 
 var testfiles = [
     "testfiles/BlueSquare.ai",
@@ -25,7 +23,7 @@ var testfiles = [
     "testfiles/militaerpostkarte.pdf"
 ];
 
-//logVersionInformation();
+logVersionInformation();
 
 //validateXmp();
 
@@ -36,10 +34,14 @@ testfiles.forEach(function(testfile) {
 });
 */
 
-//rdfToJsonLd();
-
 //ReadXmp("outfiles/testfiles/BlueSquare.ai");
-//writeXmp(testfiles[0]);
+//WriteXmp(testfiles[0]);
+
+function logVersionInformation() {
+    console.log("\nExport Information:\n");
+    console.log("Addon Version: " + xmptoolkit.version());
+    console.log("Xmp Toolkit SDK Version: " + xmptoolkit.sdkVersion());
+}
 
 function validateXmp() {
     xmptoolkit.validateXmp(createTextXmpMetadata(), function(isValid) {
@@ -47,7 +49,7 @@ function validateXmp() {
     });  
 }
 
-function writeXmp(filepath) {
+function WriteXmp(filepath) {
     var outfilePath = "outfiles/" + filepath
     fse.copy(filepath, outfilePath, function (err) {
         if (err) 
@@ -61,16 +63,10 @@ function writeXmp(filepath) {
 
 function ReadXmp(filepath) {
     xmptoolkit.readXmp(filepath, function(rawXmp) {
-        rdfToJsonLd(rawXmp);
-        //console.log("Raw XMP: \n\n" + rawXmp + "\n\n");
+        console.log("Raw XMP: \n\n" + rawXmp + "\n\n");
     });
 }
 
-function logVersionInformation() {
-    console.log("\nExport Information:\n");
-    console.log("Addon Version: " + xmptoolkit.version());
-    console.log("Xmp Toolkit SDK Version: " + xmptoolkit.sdkVersion());
-}
 
 function createTextXmpMetadata() {
     return "<rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'>" +
@@ -101,6 +97,8 @@ function createTextXmpMetadata() {
 		</rdf:RDF>
         */
 }
+
+/*
 
 function getJsonLd() {
     return '[' +
@@ -235,6 +233,7 @@ xmptoolkit.readXmp(testfiles[14], function(rawXmp) {
         jsonldToRdfXml(jsonldString);
     });
 });
+*/
 
 
 

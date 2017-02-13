@@ -8,8 +8,7 @@
   },
   "dependencies": {
     "fs-extra": "^2.0.0",
-    "nan": "^2.5.0",
-    "rdflib": "^0.13.0"
+    "nan": "^2.5.0"
   },
   "repository": {
     "type": "git",

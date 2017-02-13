@@ -310,12 +310,12 @@ testrdfxml2 = '''
 
 
 g = Graph().parse(data=testrdfxml2, format='xml')
-#print(g.serialize(format='json-ld'))
-g.serialize(destination='jsonld.txt', format='json-ld')
 
-with open("jsonld.txt", "rt") as in_file:
+g.serialize(destination='jsonld.json', format='json-ld')
+
+with open("jsonld.json", "rt") as in_file:
     text = in_file.read()
     print(text)
 
     g2 = Graph().parse(data=text, format='json-ld')
-    g.serialize(destination='rdfxml.txt', format='pretty-xml')
+    g.serialize(destination='rdfxml.xml', format='pretty-xml')
