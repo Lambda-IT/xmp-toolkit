@@ -1,0 +1,10 @@
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Scott Frees <scott.frees@gmail.com> (http://scottfrees.com/)",
+  "license": "ISC",
+  "dependencies": {
+    "hello-world-nan-nodecpp": "file:../xmptoolkitnan"
+  }
+}

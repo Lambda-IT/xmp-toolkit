@@ -68,7 +68,6 @@ ipch/
 *.VC.db
 *.VC.VC.opendb
 
-/nodeaddon/build/Debug/*
-/nodeaddon/build/Release/*
-/nodeaddon/libraries/*
+/xmptoolkitnan/build/*
+/xmptoolkitnan/libraries/*
 /outfiles/*
