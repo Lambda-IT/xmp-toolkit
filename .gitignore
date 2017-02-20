@@ -70,4 +70,4 @@ ipch/
 
 /xmptoolkitnan/build/*
 /xmptoolkitnan/libraries/*
-/outfiles/*
+*/outfiles/*

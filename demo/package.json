@@ -5,6 +5,7 @@
   "author": "Scott Frees <scott.frees@gmail.com> (http://scottfrees.com/)",
   "license": "ISC",
   "dependencies": {
+    "fs-extra": "^2.0.0",
     "hello-world-nan-nodecpp": "file:../xmptoolkitnan"
   }
 }
