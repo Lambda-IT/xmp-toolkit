@@ -9,7 +9,6 @@ using namespace std;
 using namespace Nan;
 using namespace v8;
 
-#define WIN_ENV 1
 #define XMP_INCLUDE_XMPFILES 1 //if using XMPFiles 
 #define TXMP_STRING_TYPE std::string 
 

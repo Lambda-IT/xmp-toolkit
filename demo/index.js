@@ -77,4 +77,4 @@ function createTextXmpMetadata() {
 
 logVersionInformation();
 readExample(testfiles[0]);
-writeExample(testfiles[1], createTextXmpMetadata());
+//writeExample(testfiles[1], createTextXmpMetadata());
