@@ -68,13 +68,14 @@ public:
 			}
 
 			if (ok) {
+				cout << "XMP: " << rawXmp << endl;
 				SXMPMeta meta = createXMPFromString(rawXmp);
-				//SXMPMeta meta = createXMPFromRDF(rawXmp);
 
 				// Check we can put the XMP packet back into the file
 				if (myFile.CanPutXMP(meta))
 				{
 					// If so then update the file with the modified XMP
+					cout << "Can put meta" << endl;
 					myFile.PutXMP(meta);
 				}
 

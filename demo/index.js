@@ -38,6 +38,8 @@ function writeExample(filepath, xmp) {
         if (err) 
             return console.error(err);
 
+        console.log(xmp);
+
         xmptoolkit.writeXmp(outfilePath, xmp, function(filepath) {
             console.log("File: " + filepath);
         });    
@@ -46,7 +48,7 @@ function writeExample(filepath, xmp) {
 
 function createTextXmpMetadata() {
     return "<rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'>" +
-		"<rdf:Description>" +
+		"<rdf:Description rdf:about='' xmlns:dc='http://purl.org/dc/elements/1.1/'>" +
 		"<dc:subject>" +
 		"<rdf:Bag>" +
 		"<rdf:li>XMP</rdf:li>" +
@@ -76,5 +78,5 @@ function createTextXmpMetadata() {
 
 
 logVersionInformation();
-readExample(testfiles[0]);
-//writeExample(testfiles[1], createTextXmpMetadata());
+//readExample(testfiles[0]);
+writeExample(testfiles[14], createTextXmpMetadata());

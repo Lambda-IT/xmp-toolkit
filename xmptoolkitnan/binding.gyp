@@ -31,14 +31,14 @@
                 ],
             }
           ],
-          ['OS=="windows"', 
+          ['OS=="win"', 
             {
                 'defines': [
                     'WIN_ENV=1'
                 ],
                 'libraries': [ 
-                    "\"..\libraries\windows_x64\Release\XMPCoreStatic.lib\"",
-                    "\"..\libraries\windows_x64\Release\XMPFilesStatic.lib\""
+                    "..\libraries\windows_x64\Release\XMPCoreStatic.lib",
+                    "..\libraries\windows_x64\Release\XMPFilesStatic.lib"
                 ],
                 'configurations': {
                     'Debug': {
