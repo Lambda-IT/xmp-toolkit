@@ -46,6 +46,22 @@ function writeExample(filepath, xmp) {
     });
 }
 
+/*
+    Generate a simple test rdf 
+
+        <rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
+		<rdf:Description rdf:about='' xmlns:dc='http://purl.org/dc/elements/1.1/'>
+		<dc:subject>
+		<rdf:Bag>
+		<rdf:li>XMP</rdf:li>
+		<rdf:li>SDK</rdf:li>
+		<rdf:li>Test2</rdf:li>
+		</rdf:Bag>
+		</dc:subject>
+		<dc:format>image/tiff</dc:format>
+		</rdf:Description>
+		</rdf:RDF>
+*/
 function createTextXmpMetadata() {
     return "<rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'>" +
 		"<rdf:Description rdf:about='' xmlns:dc='http://purl.org/dc/elements/1.1/'>" +
@@ -59,24 +75,9 @@ function createTextXmpMetadata() {
 		"<dc:format>image/tiff</dc:format>" +
 		"</rdf:Description>" +
 		"</rdf:RDF>";
-
-/*
-        <rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
-		<rdf:Description rdf:about='' xmlns:dc='http://purl.org/dc/elements/1.1/'>
-		<dc:subject>
-		<rdf:Bag>
-		<rdf:li>XMP</rdf:li>
-		<rdf:li>SDK</rdf:li>
-		<rdf:li>Test2</rdf:li>
-		</rdf:Bag>
-		</dc:subject>
-		<dc:format>image/tiff</dc:format>
-		</rdf:Description>
-		</rdf:RDF>
-        */
 }
 
 
 logVersionInformation();
-//readExample(testfiles[0]);
+readExample(testfiles[0]);
 writeExample(testfiles[14], createTextXmpMetadata());
