@@ -1,5 +1,6 @@
 {
   "name": "xmptoolkit",
+  "private": true,
   "version": "1.0.0",
   "main": "./build/Release/xmptoolkit_nan_addon",
   "gypfile": true,
