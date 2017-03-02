@@ -27,8 +27,15 @@ function logVersionInformation() {
 }
 
 function readExample(filepath) {
-    xmptoolkit.readXmp(filepath, function(rawXmp) {
-        console.log("Raw XMP: \n\n" + rawXmp + "\n\n");
+    xmptoolkit.readXmp(filepath, function(error, rawXmp, outFilename, outAssetId) {
+        if(error) {
+            console.error(error);
+            return;
+        }
+
+        //console.log("Raw XMP: \n\n" + rawXmp + "\n\n");
+        console.log("OutFilename: " + outFilename + "\n");
+        console.log("OutAssetId: " + outAssetId + "\n");
     });
 }
 
@@ -79,5 +86,5 @@ function createTextXmpMetadata() {
 
 
 logVersionInformation();
-readExample(testfiles[0]);
-writeExample(testfiles[14], createTextXmpMetadata());
+readExample(testfiles[14]);
+//writeExample(testfiles[14], createTextXmpMetadata());

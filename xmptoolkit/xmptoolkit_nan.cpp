@@ -11,6 +11,7 @@ using namespace v8;
 
 #define XMP_INCLUDE_XMPFILES 1 //if using XMPFiles 
 #define TXMP_STRING_TYPE std::string 
+#define NS_DIGAME "http://digame.born.ch/"
 
 #include "XMP.incl_cpp"
 #include "XMP.hpp"
@@ -68,7 +69,6 @@ public:
 			}
 
 			if (ok) {
-				cout << "XMP: " << rawXmp << endl;
 				SXMPMeta meta = createXMPFromString(rawXmp);
 
 				// Check we can put the XMP packet back into the file
@@ -77,15 +77,20 @@ public:
 					// If so then update the file with the modified XMP
 					cout << "Can put meta" << endl;
 					myFile.PutXMP(meta);
+				} else {
+					error = "Unable to put the xmp metadata";
 				}
 
 				// Close the SXMPFile.  This *must* be called.  The XMP is not
 				// actually written and the disk file is not closed until this call is made.
 				myFile.CloseFile();
+			} else {
+				error = "Unable to read the file";
 			}
 
 		}
 		catch (XMP_Error & e) {
+			error = "XMP Error";
 			cout << "ERROR: " << e.GetErrMsg() << endl;
 		}
 
@@ -94,11 +99,15 @@ public:
 	}
 
 	void HandleOKCallback() {
-		Local<Value> argv[1] = { Nan::New<String>(outfilePath).ToLocalChecked() };
-		callback->Call(1, argv);
+		Local<Value> argv[2] = { 
+			Nan::New<String>(error).ToLocalChecked(),
+			Nan::New<String>(outfilePath).ToLocalChecked() 
+		};
+		callback->Call(2, argv);
 	}
 
 private:
+	string error;
 	string outfilePath;
 	string rawXmp;
 };
@@ -144,10 +153,17 @@ public:
 				// Close the SXMPFile.  The resource file is already closed if it was
 				// opened as read only but this call must still be made.
 				myFile.CloseFile();
+
+				// Collect some information from Namespace: "http://digame.born.ch/"
+				meta.GetProperty(NS_DIGAME, "Filename", &outFilename, NULL);
+				meta.GetProperty(NS_DIGAME, "AssetId", &outAssetId, NULL);
+			} else {
+				error = "Unable to read the file";
 			}
 		}
 		catch (XMP_Error & e) {
-			cout << "ERROR: " << e.GetErrMsg() << endl;
+			error = "XMP Error";
+			cout << "XMP Error: " << e.GetErrMsg() << endl;
 		}
 
 		SXMPFiles::Terminate();
@@ -155,13 +171,21 @@ public:
 	}
 
 	void HandleOKCallback() {
-		Local<Value> argv[1] = { Nan::New<String>(rawXmp).ToLocalChecked() };
-		callback->Call(1, argv);
+		Local<Value> argv[4] = { 
+			Nan::New<String>(error).ToLocalChecked(),
+			Nan::New<String>(rawXmp).ToLocalChecked(), 
+			Nan::New<String>(outFilename).ToLocalChecked(),
+			Nan::New<String>(outAssetId).ToLocalChecked()
+		};
+		callback->Call(4, argv);
 	}
 
 private:
+    string error;
 	string filename;
 	string rawXmp;
+	string outFilename;
+	string outAssetId;
 };
 
 class XmpValidationWorker : public AsyncWorker {
@@ -200,7 +224,6 @@ private:
 	bool isValid;
 };
 
-
 NAN_METHOD(Version) {
 	info.GetReturnValue().Set(
 		Nan::New<String>("0.1").ToLocalChecked());
@@ -234,8 +257,6 @@ NAN_METHOD(ValidateXmp) {
 
 	AsyncQueueWorker(new XmpValidationWorker(callback, rawXmp));
 }
-
-// Add validation method
 
 NAN_METHOD(ReadXmp) {
 	v8::String::Utf8Value val(info[0]->ToString());
