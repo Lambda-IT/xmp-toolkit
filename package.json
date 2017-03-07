@@ -1,0 +1,22 @@
+{
+  "name": "xmptoolkit",
+  "version": "0.1.0",
+  "description": "Node.js XMP Toolkit (Adobe XMKP SDK Wrapper)",
+  "main": "./build/Release/xmptoolkit_nan_addon",
+  "gypfile": true,
+  "types": "index.d.ts",
+  "license": "ISC",
+    "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lambda-IT/xmp-toolkit"
+  },
+  "keywords": [
+    "XMP",
+    "Toolkit",
+    "Adobe XMP SDK"
+  ],
+  "author": "Marc Berchtold (https://www.lambda-it.ch/)",
+  "dependencies": {
+    "nan": "^2.5.1"
+  }
+}
