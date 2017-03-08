@@ -154,6 +154,9 @@ public:
 				// opened as read only but this call must still be made.
 				myFile.CloseFile();
 
+				XMP_OptionBits outOpts = kXMP_OmitPacketWrapper; //kXMP_UseCompactFormat; //kXMP_OmitPacketWrapper | kXMP_UseCanonicalFormat; 
+				meta.SerializeToBuffer (&rdf, outOpts);
+
 				// Collect some information from Namespace: "http://digame.born.ch/"
 				meta.GetProperty(NS_DIGAME, "Filename", &outFilename, NULL);
 				meta.GetProperty(NS_DIGAME, "AssetId", &outAssetId, NULL);
@@ -171,19 +174,21 @@ public:
 	}
 
 	void HandleOKCallback() {
-		Local<Value> argv[4] = { 
+		Local<Value> argv[5] = { 
 			Nan::New<String>(error).ToLocalChecked(),
 			Nan::New<String>(rawXmp).ToLocalChecked(), 
 			Nan::New<String>(outFilename).ToLocalChecked(),
-			Nan::New<String>(outAssetId).ToLocalChecked()
+			Nan::New<String>(outAssetId).ToLocalChecked(),
+			Nan::New<String>(rdf).ToLocalChecked()
 		};
-		callback->Call(4, argv);
+		callback->Call(5, argv);
 	}
 
 private:
     string error;
 	string filename;
 	string rawXmp;
+	string rdf;
 	string outFilename;
 	string outAssetId;
 };

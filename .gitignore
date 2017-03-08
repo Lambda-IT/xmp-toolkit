@@ -68,5 +68,5 @@ ipch/
 *.VC.db
 *.VC.VC.opendb
 
-/xmptoolkit/build/*
-*/outfiles/*
+/build/*
+/outfiles/*
