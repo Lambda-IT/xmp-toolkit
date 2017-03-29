@@ -4,7 +4,7 @@
   "description": "Node.js XMP Toolkit (Adobe XMKP SDK Wrapper)",
   "main": "./build/Release/xmptoolkit_nan_addon",
   "gypfile": true,
-  "types": "index.d.ts",
+  "types": "./index.d.ts",
   "license": "ISC",
   "repository": {
     "type": "git",
