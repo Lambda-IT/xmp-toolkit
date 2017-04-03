@@ -120,13 +120,25 @@ public:
 	}
 
 	void Execute() {
-
-		cout << "Worker Thread Id: " << std::this_thread::get_id() << endl;
-
-		SXMPMeta::Initialize();
+        
+        if(!SXMPMeta::Initialize())
+        {
+            cout << "Could not initialize toolkit!";
+        }
+        
 		XMP_OptionBits options = 0;
-		SXMPFiles::Initialize(options);
-
+        
+        #if UNIX_ENV
+            options |= kXMPFiles_ServerMode;
+        #endif
+        
+        if (!SXMPFiles::Initialize(options))
+        {
+            cout << "Could not initialize SXMPFiles.";
+        }
+        
+        cout << "Action: SXMPFiles::Initialize(options); "  << endl;
+        
 		try {
 			// Options to open the file with - read only and use a file handler
 			XMP_OptionBits opts = kXMPFiles_OpenForRead | kXMPFiles_OpenUseSmartHandler;
@@ -193,42 +205,6 @@ private:
 	string outAssetId;
 };
 
-class XmpValidationWorker : public AsyncWorker {
-public:
-	XmpValidationWorker(Callback * callback, string rawXmp) :
-		AsyncWorker(callback), rawXmp(rawXmp) {
-	}
-
-	void Execute() {
-
-		cout << "Worker Thread Id: " << std::this_thread::get_id() << endl;
-
-		SXMPMeta::Initialize();
-
-		try {
-			SXMPMeta meta = createXMPFromString(rawXmp);
-			//meta.SetDefaultErrorCallback()
-			//meta.set
-			//meta.DumpObject()
-			isValid = true;
-		}
-		catch (XMP_Error & e) {
-			cout << "ERROR: " << e.GetErrMsg() << endl;
-		}
-
-		SXMPMeta::Terminate();
-	}
-
-	void HandleOKCallback() {
-		Local<Value> argv[1] = { Nan::New<Boolean>(isValid)};
-		callback->Call(1, argv);
-	}
-
-private:
-	string rawXmp;
-	bool isValid;
-};
-
 NAN_METHOD(Version) {
 	info.GetReturnValue().Set(
 		Nan::New<String>("0.1").ToLocalChecked());
@@ -254,15 +230,6 @@ NAN_METHOD(WriteXmp) {
 	AsyncQueueWorker(new XmpWriteWorker(callback, filename, rawXmp));
 }
 
-NAN_METHOD(ValidateXmp) {
-	v8::String::Utf8Value rawXmpArg(info[0]->ToString());
-	std::string rawXmp(*rawXmpArg);
-
-	Callback *callback = new Callback(info[1].As<Function>());
-
-	AsyncQueueWorker(new XmpValidationWorker(callback, rawXmp));
-}
-
 NAN_METHOD(ReadXmp) {
 	v8::String::Utf8Value val(info[0]->ToString());
 	std::string filename(*val);
@@ -270,10 +237,9 @@ NAN_METHOD(ReadXmp) {
 	Callback *callback = new Callback(info[1].As<Function>());
 
 	AsyncQueueWorker(new XmpReadWorker(callback, filename));
-}\
+}
 
 NAN_MODULE_INIT(Init) {
-
 	 Nan::Set(target, New<String>("version").ToLocalChecked(),
 		 GetFunction(New<FunctionTemplate>(Version)).ToLocalChecked());
 	 Nan::Set(target, New<String>("sdkVersion").ToLocalChecked(),
@@ -282,8 +248,6 @@ NAN_MODULE_INIT(Init) {
 		 GetFunction(New<FunctionTemplate>(ReadXmp)).ToLocalChecked());
 	 Nan::Set(target, New<String>("writeXmp").ToLocalChecked(),
 		 GetFunction(New<FunctionTemplate>(WriteXmp)).ToLocalChecked());
-	 Nan::Set(target, New<String>("validateXmp").ToLocalChecked(),
-		 GetFunction(New<FunctionTemplate>(ValidateXmp)).ToLocalChecked());
 }  
 
 NODE_MODULE(xmptoolkit_nan_addon, Init)

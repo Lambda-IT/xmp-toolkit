@@ -15,10 +15,6 @@
                     "OTHER_LDFLAGS": [ 
                         "-stdlib=libc++"
                     ],
-                    "OTHER_CXXFLAGS": [
-                        "-fvisibility=hidden",
-                        "-fvisibility-inlines-hidden"
-                    ],
                     "MACOSX_DEPLOYMENT_TARGET": "10.12",
                     'GCC_ENABLE_CPP_EXCEPTIONS': 'YES'
                 },

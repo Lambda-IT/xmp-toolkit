@@ -2,5 +2,7 @@
     "vsicons.presets.angular": false,
     "files.associations": {
         "xlocale": "cpp"
-    }
+    },
+    "python.linting.pylintEnabled": false,
+    "python.formatting.provider": "yapf"
 }

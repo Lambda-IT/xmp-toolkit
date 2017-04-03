@@ -6,12 +6,34 @@
     "configurations": [        
         {
          "name": "Launch Tests",
-         "type": "node2",
+         "type": "node",
          "request": "launch",
          "program": "${workspaceRoot}\\node_modules\\tape\\bin\\tape",
          "stopOnEntry": false,
          "args": [
             "${workspaceRoot}\\tests/**/*.js"            
+         ],
+         "cwd": "${workspaceRoot}",
+         "runtimeExecutable": null,
+         "runtimeArgs": [
+            "--nolazy"
+         ],
+         "env": {
+            "NODE_ENV": "development",
+            "NODE_PATH": "${workspaceRoot}"
+         },
+         "console": "internalConsole",
+         "sourceMaps": true,
+         "outFiles": []
+      },
+      {
+         "name": "Mac Launch Tests",
+         "type": "node",
+         "request": "launch",
+         "program": "${workspaceRoot}/node_modules/tape/bin/tape",
+         "stopOnEntry": false,
+         "args": [
+            "${workspaceRoot}/tests/**/*.js"            
          ],
          "cwd": "${workspaceRoot}",
          "runtimeExecutable": null,
