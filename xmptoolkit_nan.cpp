@@ -45,9 +45,6 @@ public:
 	}
 
 	void Execute() {
-
-		cout << "Worker Thread Id: " << std::this_thread::get_id() << endl;
-
 		SXMPMeta::Initialize();
 		XMP_OptionBits options = 0;
 		SXMPFiles::Initialize(options);
@@ -75,7 +72,6 @@ public:
 				if (myFile.CanPutXMP(meta))
 				{
 					// If so then update the file with the modified XMP
-					cout << "Can put meta" << endl;
 					myFile.PutXMP(meta);
 				} else {
 					error = "Unable to put the xmp metadata";
@@ -136,8 +132,6 @@ public:
         {
             cout << "Could not initialize SXMPFiles.";
         }
-        
-        cout << "Action: SXMPFiles::Initialize(options); "  << endl;
         
 		try {
 			// Options to open the file with - read only and use a file handler
