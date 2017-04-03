@@ -14,8 +14,6 @@ test('read rdf test', function (t) {
       const doc = new dom().parseFromString(rdf);
       const rdfElement = doc.getElementsByTagName('rdf:RDF')[0];
       const result = new serializer().serializeToString(rdfElement);
-
-      console.log(result);
     }
 
     t.pass();
