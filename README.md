@@ -50,7 +50,7 @@ function readXmp(filepath: string, readCallback: (error: string, rawXmp: string,
  * @param readCallback Read Handler
  */
 function writeXmp(filepath: string, rawXmp: string, writeCallback: (error: string, outfilePath: string) => void)
-
+```
  
 
 ## License
