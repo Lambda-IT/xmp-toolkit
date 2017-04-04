@@ -1,6 +1,6 @@
 {
   "name": "xmptoolkit",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Node.js XMP Toolkit (Adobe XMKP SDK Wrapper)",
   "main": "./build/Release/xmptoolkit_nan_addon",
   "gypfile": true,
