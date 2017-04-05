@@ -67,7 +67,5 @@ ipch/
 *.cachefile
 *.VC.db
 *.VC.VC.opendb
-
-/build/*
-/outfiles/*
-/test/testoutput/*
+build
+test/testoutput/*
