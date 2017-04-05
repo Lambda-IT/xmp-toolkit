@@ -8,6 +8,23 @@
         "include"
       ],
       'conditions': [
+          ['OS=="linux"', 
+            {
+                "cflags!": [
+                    '-fno-exceptions'
+                ],
+                'cflags_cc!': [
+                    '-fno-exceptions'
+                ],
+                'libraries': [ 
+                    '../libraries/i80386linux_x64/release/staticXMPCore.ar',
+                    '../libraries/i80386linux_x64/release/staticXMPFiles.ar',
+                ],
+                'defines': [
+                    'UNIX_ENV=1'
+                ],
+            }
+          ],
           ['OS=="mac"', 
             {
                 "xcode_settings": {

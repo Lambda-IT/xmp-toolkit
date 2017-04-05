@@ -47,6 +47,11 @@ public:
 	void Execute() {
 		SXMPMeta::Initialize();
 		XMP_OptionBits options = 0;
+
+		#if UNIX_ENV
+            options |= kXMPFiles_ServerMode;
+        #endif
+
 		SXMPFiles::Initialize(options);
 
 		try {
