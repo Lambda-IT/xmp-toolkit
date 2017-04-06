@@ -7,7 +7,7 @@ test('write rdf test', function (t) {
     const testfile = path.join(__dirname, './testfiles/Keller_Daniel_003_13_18cm.png');
     const targetFile = path.join(__dirname, './testoutput/Keller_Daniel_003_13_18cm_write_changed.png');
 
-    const testRdfXml2 = `<rdf:RDF
+    const testRdfXml = `<rdf:RDF
   xmlns:ns1="http://ns.adobe.com/camera-raw-settings/1.0/"
   xmlns:ns7="http://ns.adobe.com/exif/1.0/aux/"
   xmlns:ns5="http://ns.adobe.com/xap/1.0/mm/"
@@ -254,14 +254,12 @@ test('write rdf test', function (t) {
             t.fail('file copy failed');
         }
 
-        xmptoolkit.writeXmp(targetFile, testRdfXml2, function (error, outFilename) {
+        xmptoolkit.writeXmp(targetFile, testRdfXml, function (error, outFilename) {
             if (error) {
                 t.fail('xmp read failed');
             } else {
-                console.log(outFilename);
+                t.pass();
             }
-
-            t.pass();
 
             t.end();
         });

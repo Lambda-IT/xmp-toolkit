@@ -5,7 +5,7 @@ const xmptoolkit = require('../build/Release/xmptoolkit_nan_addon');
 
 test('read version test', function (t) {
     let version = xmptoolkit.version();
-    t.equal(version, '0.1');
+    t.equal(version, '1.0.0');
     t.end();
 });
 

@@ -7,7 +7,7 @@ const xmptoolkit = require('../build/Release/xmptoolkit_nan_addon');
 test('read rdf test', function (t) {
   const testfile = path.join(__dirname, './testfiles/Keller_Daniel_003_13_18cm.png');
   
-  xmptoolkit.readXmp(testfile, function(error, rawXmp, outFilename, outAssetId, rdf) {
+  xmptoolkit.readXmp(testfile, function(error, rawXmp, rdf) {
     if(error) {
       t.fail('xmp read failed');
     } else {

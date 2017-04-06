@@ -11,7 +11,6 @@ using namespace v8;
 
 #define XMP_INCLUDE_XMPFILES 1 //if using XMPFiles 
 #define TXMP_STRING_TYPE std::string 
-#define NS_DIGAME "http://digame.born.ch/"
 
 #include "XMP.incl_cpp"
 #include "XMP.hpp"
@@ -167,10 +166,6 @@ public:
 
 				XMP_OptionBits outOpts = kXMP_OmitPacketWrapper; //kXMP_UseCompactFormat; //kXMP_OmitPacketWrapper | kXMP_UseCanonicalFormat; 
 				meta.SerializeToBuffer (&rdf, outOpts);
-
-				// Collect some information from Namespace: "http://digame.born.ch/"
-				meta.GetProperty(NS_DIGAME, "Filename", &outFilename, NULL);
-				meta.GetProperty(NS_DIGAME, "AssetId", &outAssetId, NULL);
 			} else {
 				error = "Unable to read the file";
 			}
@@ -185,14 +180,12 @@ public:
 	}
 
 	void HandleOKCallback() {
-		Local<Value> argv[5] = { 
+		Local<Value> argv[3] = { 
 			Nan::New<String>(error).ToLocalChecked(),
 			Nan::New<String>(rawXmp).ToLocalChecked(), 
-			Nan::New<String>(outFilename).ToLocalChecked(),
-			Nan::New<String>(outAssetId).ToLocalChecked(),
 			Nan::New<String>(rdf).ToLocalChecked()
 		};
-		callback->Call(5, argv);
+		callback->Call(3, argv);
 	}
 
 private:
@@ -200,13 +193,11 @@ private:
 	string filename;
 	string rawXmp;
 	string rdf;
-	string outFilename;
-	string outAssetId;
 };
 
 NAN_METHOD(Version) {
 	info.GetReturnValue().Set(
-		Nan::New<String>("0.1").ToLocalChecked());
+		Nan::New<String>("1.0.0").ToLocalChecked());
 }
 
 NAN_METHOD(SdkVersion) {
