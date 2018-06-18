@@ -11,7 +11,9 @@
     "url": "git+https://github.com/Lambda-IT/xmp-toolkit"
   },
   "scripts": {
-    "test": "tape tests/**/*.js"
+    "test": "tape tests/**/*.js",
+    "test-write": "tape tests/write-test.js",
+    "test-read": "tape tests/read-test.js"
   },
   "keywords": [
     "XMP",

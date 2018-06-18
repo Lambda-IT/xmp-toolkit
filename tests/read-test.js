@@ -21,3 +21,22 @@ test('read rdf test', function (t) {
     t.end();
   });
 });
+
+test('read rdf schnee', function (t) {
+  const testfile = path.join(__dirname, './testfiles/schnee.jpg');
+  
+  xmptoolkit.readXmp(testfile, function(error, rawXmp, rdf) {
+    if(error) {
+      t.fail('xmp read failed');
+    } else {
+      const doc = new dom().parseFromString(rdf);
+      const rdfElement = doc.getElementsByTagName('rdf:RDF')[0];
+      const result = new serializer().serializeToString(rdfElement);
+      console.log("RESULT",result)
+    }
+
+    t.pass();
+
+    t.end();
+  });
+});
