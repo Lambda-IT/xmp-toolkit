@@ -197,7 +197,7 @@ private:
 
 NAN_METHOD(Version) {
 	info.GetReturnValue().Set(
-		Nan::New<String>("1.0.0").ToLocalChecked());
+		Nan::New<String>("1.1.0").ToLocalChecked());
 }
 
 NAN_METHOD(SdkVersion) {
@@ -209,10 +209,10 @@ NAN_METHOD(SdkVersion) {
 }
 
 NAN_METHOD(WriteXmp) {
-	v8::String::Utf8Value filenameArg(info[0]->ToString());
+	Nan::Utf8String filenameArg(info[0]);
 	std::string filename(*filenameArg);
 
-	v8::String::Utf8Value rawXmpArg(info[1]->ToString());
+	Nan::Utf8String rawXmpArg(info[1]);
 	std::string rawXmp(*rawXmpArg);
 
 	Callback *callback = new Callback(info[2].As<Function>());
@@ -221,7 +221,7 @@ NAN_METHOD(WriteXmp) {
 }
 
 NAN_METHOD(ReadXmp) {
-	v8::String::Utf8Value val(info[0]->ToString());
+	Nan::Utf8String val(info[0]);
 	std::string filename(*val);
 
 	Callback *callback = new Callback(info[1].As<Function>());
