@@ -16,7 +16,7 @@ extern "C" {
 #endif
 
 // =================================================================================================
-
+// compile with: /EHsc
 static XMP_Bool WrapErrorNotify ( XMPMeta_ErrorCallbackProc proc, void * context,
 							  XMP_ErrorSeverity severity, XMP_Int32 cause, XMP_StringPtr message )
 {

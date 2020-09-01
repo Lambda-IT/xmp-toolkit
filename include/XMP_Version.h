@@ -33,19 +33,19 @@ versions.
 */
 /* ============================================================================================= */
 
-#define XMPCORE_API_VERSION_MAJOR  5
-#define XMPCORE_API_VERSION_MINOR  6
+#define XMPCORE_API_VERSION_MAJOR  6
+#define XMPCORE_API_VERSION_MINOR  0
 #define XMPCORE_API_VERSION_MICRO  0
 
-#define XMPCORE_API_VERSION 5.6.0
-#define XMPCORE_API_VERSION_STRING "5.6.0"
+#define XMPCORE_API_VERSION 6.0.0
+#define XMPCORE_API_VERSION_STRING "6.0.0"
 
-#define XMPFILES_API_VERSION_MAJOR  5
-#define XMPFILES_API_VERSION_MINOR  7
+#define XMPFILES_API_VERSION_MAJOR  6
+#define XMPFILES_API_VERSION_MINOR  0
 #define XMPFILES_API_VERSION_MICRO  0
 
-#define XMPFILES_API_VERSION 5.7.0
-#define XMPFILES_API_VERSION_STRING "5.7.0"
+#define XMPFILES_API_VERSION 6.0.0
+#define XMPFILES_API_VERSION_STRING "6.0.0"
 
 /* ============================================================================================= */
 

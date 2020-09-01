@@ -11,6 +11,6 @@ test('read version test', function (t) {
 
 test('read sdk version test', function (t) {
     let sdkVersion = xmptoolkit.sdkVersion();
-    t.equal(sdkVersion, 'XMP Core 5.6.0');
+    t.equal(sdkVersion, 'XMP Core 6.0.0');
     t.end();
 });

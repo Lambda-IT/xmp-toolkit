@@ -103,7 +103,9 @@ public:
 			Nan::New<String>(error).ToLocalChecked(),
 			Nan::New<String>(outfilePath).ToLocalChecked() 
 		};
-		callback->Call(2, argv);
+
+		Nan::AsyncResource resource("HandleOKCallback");
+		callback->Call(2, argv, &resource);
 	}
 
 private:
@@ -185,7 +187,9 @@ public:
 			Nan::New<String>(rawXmp).ToLocalChecked(), 
 			Nan::New<String>(rdf).ToLocalChecked()
 		};
-		callback->Call(3, argv);
+
+		Nan::AsyncResource resource("HandleOKCallback");
+		callback->Call(3, argv, &resource);
 	}
 
 private:
