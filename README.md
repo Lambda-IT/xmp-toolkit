@@ -62,6 +62,21 @@ function readXmp(filepath: string, readCallback: (error: string, rawXmp: string,
 function writeXmp(filepath: string, rawXmp: string, writeCallback: (error: string, outfilePath: string) => void)
 ```
 
+## Development
+
+### Link Collection for some happend errors
+
+- [Adobe XMP Toolkit Page](https://www.adobe.com/devnet/xmp.html)
+- [Adobe XMP Toolkit Source](https://github.com/adobe/XMP-Toolkit-SDK/)
+- [Node nan Docs/Package](https://www.npmjs.com/package/nan)
+- Linux Build
+   - [Get Latest CMake for Debian based System (not documented in XMP Toolkit docs)](https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line)
+   - [Install Linux Dependencies, Script](https://github.com/adobe/XMP-Toolkit-SDK/pull/1/files)
+- Windows Build
+   - [Mismatch Error](https://stackoverflow.com/questions/7668200/error-lnk2038-mismatch-detected-for-iterator-debug-level-value-0-doesnt)
+   - [MSBuild Tool](https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild?view=vs-2019)
+   - msbuild XMPToolkitSDK64.sln  /p:Configuration=Release /p:Platform="x64" (simpler than using VSC)
+
 
 ## License
 
