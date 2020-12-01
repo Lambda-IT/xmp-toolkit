@@ -103,7 +103,9 @@ public:
 			Nan::New<String>(error).ToLocalChecked(),
 			Nan::New<String>(outfilePath).ToLocalChecked() 
 		};
-		callback->Call(2, argv);
+
+		Nan::AsyncResource resource("HandleOKCallback");
+		callback->Call(2, argv, &resource);
 	}
 
 private:
@@ -185,7 +187,9 @@ public:
 			Nan::New<String>(rawXmp).ToLocalChecked(), 
 			Nan::New<String>(rdf).ToLocalChecked()
 		};
-		callback->Call(3, argv);
+
+		Nan::AsyncResource resource("HandleOKCallback");
+		callback->Call(3, argv, &resource);
 	}
 
 private:
@@ -197,7 +201,7 @@ private:
 
 NAN_METHOD(Version) {
 	info.GetReturnValue().Set(
-		Nan::New<String>("1.0.0").ToLocalChecked());
+		Nan::New<String>("1.1.0").ToLocalChecked());
 }
 
 NAN_METHOD(SdkVersion) {
@@ -209,10 +213,10 @@ NAN_METHOD(SdkVersion) {
 }
 
 NAN_METHOD(WriteXmp) {
-	v8::String::Utf8Value filenameArg(info[0]->ToString());
+	Nan::Utf8String filenameArg(info[0]);
 	std::string filename(*filenameArg);
 
-	v8::String::Utf8Value rawXmpArg(info[1]->ToString());
+	Nan::Utf8String rawXmpArg(info[1]);
 	std::string rawXmp(*rawXmpArg);
 
 	Callback *callback = new Callback(info[2].As<Function>());
@@ -221,7 +225,7 @@ NAN_METHOD(WriteXmp) {
 }
 
 NAN_METHOD(ReadXmp) {
-	v8::String::Utf8Value val(info[0]->ToString());
+	Nan::Utf8String val(info[0]);
 	std::string filename(*val);
 
 	Callback *callback = new Callback(info[1].As<Function>());
