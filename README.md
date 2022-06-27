@@ -1,6 +1,8 @@
 # xmp-toolkit
 Library to read and write xmp metadata in files
 
+[![XMP Testing](https://github.com/Lambda-IT/xmp-toolkit/actions/workflows/node.js.yml/badge.svg)](https://github.com/Lambda-IT/xmp-toolkit/actions/workflows/node.js.yml)
+
 ## Features
 * Read XMP from file
 * Write XMP Information to file
