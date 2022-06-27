@@ -24,6 +24,10 @@ Library to read and write xmp metadata in files
 * Small fixes based on Node 12/14 compatibility
 * Remove Mac platform support, try to use the v1.0.0
 
+### 1.2.0
+
+* Node 14-16 support
+
 ## Installation
 ### Node.js
 
