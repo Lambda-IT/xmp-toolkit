@@ -5,9 +5,9 @@ name: XMP Testing
 
 on:
   push:
-    branches: [ "master", "pepare-*" ]
+    branches: [ "master", "prepare-*" ]
   pull_request:
-    branches: [ "master", "pepare-*" ]
+    branches: [ "master", "prepare-*" ]
 
 jobs:
   build:
